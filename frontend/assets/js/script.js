@@ -472,13 +472,80 @@ $(document).ready(function () {
         return cart.reduce((total, item) => total + item.quantity, 0);
     }
 
+    function ensureCustomAlert() {
+        if (document.getElementById('customAlert')) return;
+        const alertHtml = `
+            <div id="customAlert" class="alert alert-danger text-center"
+                style="display:none; position:fixed; top:20px; right:0; left:0; margin:auto; width:300px; z-index:9998;">
+                Cart Full: Your 10-item limit has been reached.
+            </div>
+        `;
+        $('body').append(alertHtml);
+    }
+
     function triggerAlert() {
+        ensureCustomAlert();
         const alertBox = $("#customAlert");
         alertBox.stop(true, true).fadeIn(300).delay(2000).fadeOut(300);
     }
 
+    function getProductImageElement(btn) {
+        let card = btn.closest(".product-card");
+        if (card.length) return card.find("img.p-image");
+        const detailCard = btn.closest(".product-detail-card");
+        if (detailCard.length) return detailCard.find("img.p-image");
+        return $("img.p-image").first();
+    }
+
+    function resolveCartItem(btn) {
+        const dataName = btn.data('productName');
+        const dataPrice = btn.data('productSalePrice') || btn.data('productPrice');
+        const dataImage = btn.data('productImage');
+
+        let name = dataName;
+        let price = dataPrice;
+        let image = dataImage;
+
+        if (!name || !price || !image) {
+            const card = btn.closest(".product-card");
+            const detailCard = btn.closest(".product-detail-card");
+            const scope = card.length ? card : detailCard;
+
+            if (!name) {
+                name = scope.find(".product-name").first().text().trim();
+            }
+
+            if (!price) {
+                price = scope.find(".sale-price").first().text().trim() ||
+                    scope.find(".price-sale").first().text().trim() ||
+                    scope.find(".price-original").first().text().trim();
+            }
+
+            if (!image) {
+                image = scope.find("img.p-image").first().attr('src');
+            }
+        }
+
+        const normalizedPrice = (() => {
+            if (price == null) return '';
+            if (typeof price === 'number') return `${price} PKR`;
+            const text = String(price).trim();
+            if (!text) return '';
+            if (!/\d/.test(text)) return '';
+            if (/PKR/i.test(text)) return text;
+            return `${text} PKR`;
+        })();
+
+        return {
+            name: name || '',
+            price: normalizedPrice,
+            image: image || ''
+        };
+    }
+
     $(document).on("click", ".product-btn-cart", function (e) {
-        if ($(this).hasClass('change-qty') || $(this).hasClass('wishlist-remove-btn') || $(this).hasClass('compare-remove-btn') || $(this).hasClass('wishlist-btn')) return;
+        const href = $(this).attr('href');
+        if ($(this).hasClass('change-qty') || $(this).hasClass('wishlist-remove-btn') || $(this).hasClass('compare-remove-btn') || $(this).hasClass('wishlist-btn') || $(this).hasClass('compare-link') || (href && href.indexOf('compare.html') !== -1)) return;
         e.preventDefault();
 
         if (getTotalCartQty() >= 10) {
@@ -486,11 +553,18 @@ $(document).ready(function () {
             return;
         }
 
-        let card = $(this).closest(".product-card");
-        let img = card.find("img.p-image");
+        const btn = $(this);
+        const img = getProductImageElement(btn);
         let cartIcon = $("#cart-icon");
-        let productName = card.find(".product-name").text();
-        let productPrice = card.find(".sale-price").text();
+        const product = resolveCartItem(btn);
+        const productName = product.name;
+        const productPrice = product.price;
+        const productImage = product.image;
+
+        if (!productName || !productPrice || !productImage) {
+            showNotif('Unable to add this product. Please refresh and try again.', 'warning');
+            return;
+        }
         
         let existingItem = cart.find(item => item.name === productName);
         if (existingItem) {
@@ -498,13 +572,13 @@ $(document).ready(function () {
         } else {
             cart.push({
                 name: productName, price: productPrice,
-                image: img.attr('src'), quantity: 1
+                image: productImage, quantity: 1
             });
         }
         
         saveAndSync();
         
-        let isBuyNow = $(this).hasClass('product-btn-buy');
+        let isBuyNow = btn.hasClass('product-btn-buy');
         if (isBuyNow) {
             setTimeout(() => {
                 window.location.href = 'cart.html';
@@ -550,8 +624,7 @@ $(document).ready(function () {
         updateWishlistButtons();
         renderWishlistPage();
         if (added) {
-            const card = btn.closest(".product-card");
-            const img = card.find("img.p-image");
+            const img = getProductImageElement(btn);
             const wishlistLink = $('.nav-link[href="wishlist.html"]').first();
             const wishlistIcon = wishlistLink.find('i').first();
             if (img.length && wishlistIcon.length) {
@@ -705,7 +778,7 @@ $(document).ready(function () {
         let subtotal = 0;
         let totalItems = 0;
         cart.forEach(item => {
-            let priceNum = parseInt(item.price.replace(/[^0-9]/g, ''));
+            let priceNum = parseInt(String(item.price || '').replace(/[^0-9]/g, ''));
             subtotal += (priceNum * item.quantity);
             totalItems += item.quantity;
         });
@@ -1139,15 +1212,15 @@ $(document).ready(function () {
                             </div>
                         </div>
                         <div class="product-actions">
-                            <a href="#" class="btn product-btn-buy product-btn-cart">Buy Now</a>
-                            <a href="#" class="btn product-btn-cart">Add to Cart</a>
+                            <a href="#" class="btn product-btn-buy product-btn-cart" data-product-id="${product.id ?? ''}" data-product-name="${product.name}" data-product-image="${product.image}" data-product-price="${product.price}" data-product-sale-price="${product.salePrice}">Buy Now</a>
+                            <a href="#" class="btn product-btn-cart" data-product-id="${product.id ?? ''}" data-product-name="${product.name}" data-product-image="${product.image}" data-product-price="${product.price}" data-product-sale-price="${product.salePrice}">Add to Cart</a>
                             <button class="btn product-btn-buy wishlist-btn ${wishlistActive ? 'active' : ''}" data-product-id="${product.id ?? ''}" data-product-name="${product.name}" data-product-image="${product.image}" data-product-price="${product.price}" data-product-sale-price="${product.salePrice}" type="button">
                                 <i class="bi ${wishlistIcon}"></i> Wishlist
                             </button>
                             <button class="btn product-btn-buy compare-btn" data-product-id="${product.id ?? ''}" data-product-name="${product.name}" data-product-image="${product.image}" data-product-price="${product.price}" data-product-sale-price="${product.salePrice}" data-product-stock="${product.stock ?? ''}" data-product-movement="${product.movement ?? ''}" type="button">
                                 <i class="bi ${compareIcon}"></i> Compare
                             </button>
-                            <a href="compare.html" class="btn product-btn-cart">View Compare</a>
+                            <a href="compare.html" class="btn product-btn-cart compare-link">View Compare</a>
                         </div>
                     </div>
                 </div>
@@ -1479,8 +1552,8 @@ function createProductCard(product) {
                             style="color: #ff6600; font-weight: bold; margin-left: 5px;">${salePrice} PKR</span>
                     </div>
                     <div class="d-flex gap-2">
-                        <a href="#" class="btn product-btn-buy product-btn-cart flex-fill">Buy Now</a>
-                        <a href="#" class="btn product-btn-cart flex-fill">Add to Cart</a>
+                        <a href="#" class="btn product-btn-buy product-btn-cart flex-fill" data-product-id="${product.id ?? ''}" data-product-name="${product.name}" data-product-image="${product.image}" data-product-price="${product.price}" data-product-sale-price="${product.salePrice}">Buy Now</a>
+                        <a href="#" class="btn product-btn-cart flex-fill" data-product-id="${product.id ?? ''}" data-product-name="${product.name}" data-product-image="${product.image}" data-product-price="${product.price}" data-product-sale-price="${product.salePrice}">Add to Cart</a>
                     </div>
                 </div>
             </div>
