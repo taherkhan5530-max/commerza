@@ -218,8 +218,19 @@ function applyContactSettings(contact) {
 
 function applySocialSettings(socialLinks) {
     if (!Array.isArray(socialLinks) || socialLinks.length === 0) return;
+    const getSocialLabel = (link) => {
+        const explicit = (link?.label || link?.name || '').trim();
+        if (explicit) return explicit;
+        const url = (link?.url || '').toLowerCase();
+        if (url.includes('facebook')) return 'Facebook';
+        if (url.includes('instagram')) return 'Instagram';
+        if (url.includes('x.com') || url.includes('twitter')) return 'X';
+        if (url.includes('linkedin')) return 'LinkedIn';
+        if (url.includes('youtube')) return 'YouTube';
+        return 'Social link';
+    };
     const html = socialLinks.map(link => `
-        <a href="${link.url}" target="_blank" rel="noopener">
+        <a href="${link.url}" target="_blank" rel="noopener" aria-label="Follow on ${getSocialLabel(link)}">
             <i class="${link.icon}"></i>
         </a>
     `).join('');
@@ -314,7 +325,7 @@ function renderAccountOrders(user) {
                 <div class="card-body">
                     <div class="d-flex justify-content-between flex-wrap gap-2">
                         <div>
-                            <h5 class="product-name mb-1">${order.orderId}</h5>
+                            <h3 class="product-name mb-1">${order.orderId}</h3>
                             <p class="product-desc mb-1">${order.orderDate}</p>
                         </div>
                         <div class="text-end">
@@ -756,7 +767,7 @@ $(document).ready(function () {
                   <div class="card-body d-flex align-items-center gap-3">
                     <img src="${item.image}" class="cart-img me-3" alt="${item.name}" />
                     <div class="flex-grow-1 text-center">
-                      <h5 class="product-name mb-1">${item.name}</h5>
+                      <h3 class="product-name mb-1">${item.name}</h3>
                       <p class="product-desc mb-2">${item.price}</p>
                       <div class="d-flex align-items-center justify-content-center gap-3 mx-auto" style="max-width: 150px;">
                         <button class="btn btn-sm product-btn-cart change-qty" data-index="${index}" data-action="minus">−</button>
@@ -1541,9 +1552,9 @@ function createProductCard(product) {
                     ${saleBadge}
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title product-name">
+                    <h3 class="card-title product-name">
                         <a href="${detailUrl}" style="text-decoration: none; color: inherit;">${product.name}</a>
-                    </h5>
+                    </h3>
                     <p class="card-text product-desc">${product.description}</p>
                     <div class="mb-3">
                         <span class="original-price"
@@ -1618,7 +1629,7 @@ function initOrderTrackingPage() {
                 <div class="card product-card">
                     <div class="card-body text-center">
                         <i class="bi bi-exclamation-triangle" style="font-size:2rem; color:#ff6600;"></i>
-                        <h5 class="product-name mt-2">Order not found</h5>
+                        <h3 class="product-name mt-2">Order not found</h3>
                         <p class="product-desc">Please check your Order ID and email.</p>
                     </div>
                 </div>
@@ -1639,7 +1650,7 @@ function initOrderTrackingPage() {
                 <div class="card-body">
                     <div class="d-flex justify-content-between flex-wrap gap-2 mb-3">
                         <div>
-                            <h5 class="product-name mb-1">${match.orderId}</h5>
+                            <h3 class="product-name mb-1">${match.orderId}</h3>
                             <p class="product-desc mb-0">${match.orderDate}</p>
                         </div>
                         <span class="status-badge ${statusClass}">${match.status}</span>
@@ -1793,7 +1804,7 @@ function renderWishlistPage() {
                 <div class="card-body d-flex align-items-center gap-3">
                     <img src="${item.image}" class="wishlist-img me-2" alt="${item.name}" />
                     <div class="flex-grow-1">
-                        <h5 class="product-name mb-1">${item.name}</h5>
+                        <h3 class="product-name mb-1">${item.name}</h3>
                         <div class="mb-2">
                             ${originalPrice ? `<span class="original-price" style="text-decoration: line-through; color: #b0b0b0;">${originalPrice} PKR</span>` : ''}
                             ${salePrice ? `<span class="sale-price" style="color: #ff6600; font-weight: bold; margin-left: 6px;">${salePrice} PKR</span>` : ''}
