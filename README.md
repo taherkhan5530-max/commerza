@@ -34,7 +34,7 @@ This repository includes front-end assets and admin UI. The backend is designed 
 - Data: /products.json
 
 ## License
-This project is proprietary. See liscense.txt.
+This project is proprietary. See license.txt.
 
 ## Contact
 - LinkedIn: https://www.linkedin.com/in/syedahmershah
