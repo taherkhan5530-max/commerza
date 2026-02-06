@@ -42,6 +42,7 @@
             }
         })();
     </script>
+    <div class="admin-backdrop" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-hidden="true"></div>
     <div class="container-fluid p-0">
         <div class="row g-0">
             <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-dark admin-sidebar collapse">
@@ -146,7 +147,7 @@
 
             <main class="col-md-9 ms-sm-auto col-lg-10 px-0 d-flex flex-column min-vh-100">
                 <div
-                    class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-4 pb-3 mb-4 px-4 border-bottom border-orange border-2">
+                    class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-4 pb-3 mb-4 px-4 border-bottom border-orange border-2 admin-topbar">
                     <div class="d-flex align-items-center">
                         <button class="btn btn-orange d-md-none me-3 rounded-2" type="button" data-bs-toggle="collapse"
                             data-bs-target=".admin-sidebar" aria-controls="sidebar" aria-expanded="false">
@@ -623,61 +624,168 @@
                     <div class="tab-pane fade" id="analyticsSection">
                         <div class="helper-banner mb-4">
                             <div>
-                                <h5 class="mb-2 text-light">Simple business overview</h5>
-                                <p class="mb-0 text-secondary">These numbers show how sales and visitors are performing this month.</p>
+                                <h5 class="mb-2 text-light">Business performance</h5>
+                                <p class="mb-0 text-secondary">Quick insights across revenue, orders, and customer quality.</p>
                             </div>
-                            <span class="step-chip">Tip: Check this weekly to spot slow periods early.</span>
+                            <span class="step-chip">Tip: Use these to spot trends and reorder stock.</span>
                         </div>
                         <div class="row g-4 mb-4">
-                            <div class="col-12 col-md-6">
+                            <div class="col-12 col-md-6 col-xl-3">
                                 <div class="card admin-card border-0 shadow-sm h-100">
-                                    <div class="card-header bg-dark border-bottom border-secondary py-3">
-                                        <h5 class="mb-0 fw-bold text-orange">Monthly Revenue</h5>
-                                    </div>
                                     <div class="card-body p-4">
-                                        <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <div>
-                                                <h2 class="fw-bold text-light mb-0">PKR 324,580</h2>
-                                                <p class="text-secondary mb-0 small">This Month</p>
-                                            </div>
-                                            <div class="text-success">
-                                                <i class="bi bi-arrow-up fs-4"></i>
-                                                <span class="fw-bold">12.5%</span>
-                                            </div>
+                                        <p class="text-secondary small mb-2 text-uppercase fw-semibold">Revenue</p>
+                                        <h3 class="fw-bold text-light mb-2">PKR 324,580</h3>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="text-secondary small">This Month</span>
+                                            <span class="text-success fw-semibold"><i class="bi bi-arrow-up"></i> 12.5%</span>
                                         </div>
-                                        <div class="progress" style="height: 8px;">
+                                        <div class="progress mt-3" style="height: 6px;">
                                             <div class="progress-bar bg-orange" style="width: 75%"></div>
                                         </div>
-                                        <p class="text-secondary small mt-2 mb-0">75% of monthly goal achieved</p>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-6">
+                            <div class="col-12 col-md-6 col-xl-3">
                                 <div class="card admin-card border-0 shadow-sm h-100">
-                                    <div class="card-header bg-dark border-bottom border-secondary py-3">
-                                        <h5 class="mb-0 fw-bold text-orange">Conversion Rate</h5>
-                                    </div>
                                     <div class="card-body p-4">
-                                        <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <div>
-                                                <h2 class="fw-bold text-light mb-0">3.2%</h2>
-                                                <p class="text-secondary mb-0 small">This Month</p>
-                                            </div>
-                                            <div class="text-success">
-                                                <i class="bi bi-arrow-up fs-4"></i>
-                                                <span class="fw-bold">0.5%</span>
-                                            </div>
+                                        <p class="text-secondary small mb-2 text-uppercase fw-semibold">Orders</p>
+                                        <h3 class="fw-bold text-light mb-2">1,284</h3>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="text-secondary small">Last 30 Days</span>
+                                            <span class="text-success fw-semibold"><i class="bi bi-arrow-up"></i> 8.1%</span>
                                         </div>
-                                        <div class="progress" style="height: 8px;">
-                                            <div class="progress-bar bg-success" style="width: 32%"></div>
+                                        <div class="progress mt-3" style="height: 6px;">
+                                            <div class="progress-bar bg-info" style="width: 62%"></div>
                                         </div>
-                                        <p class="text-secondary small mt-2 mb-0">Industry average: 2.5%</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 col-xl-3">
+                                <div class="card admin-card border-0 shadow-sm h-100">
+                                    <div class="card-body p-4">
+                                        <p class="text-secondary small mb-2 text-uppercase fw-semibold">Avg Order Value</p>
+                                        <h3 class="fw-bold text-light mb-2">PKR 2,560</h3>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="text-secondary small">This Month</span>
+                                            <span class="text-warning fw-semibold"><i class="bi bi-dash"></i> 0.3%</span>
+                                        </div>
+                                        <div class="progress mt-3" style="height: 6px;">
+                                            <div class="progress-bar bg-warning" style="width: 48%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 col-xl-3">
+                                <div class="card admin-card border-0 shadow-sm h-100">
+                                    <div class="card-body p-4">
+                                        <p class="text-secondary small mb-2 text-uppercase fw-semibold">Returning Customers</p>
+                                        <h3 class="fw-bold text-light mb-2">38%</h3>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="text-secondary small">This Month</span>
+                                            <span class="text-success fw-semibold"><i class="bi bi-arrow-up"></i> 4.2%</span>
+                                        </div>
+                                        <div class="progress mt-3" style="height: 6px;">
+                                            <div class="progress-bar bg-success" style="width: 38%"></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+                        <div class="row g-4 mb-4">
+                            <div class="col-12 col-lg-7">
+                                <div class="card admin-card border-0 shadow-sm h-100">
+                                    <div class="card-header bg-dark border-bottom border-secondary py-3">
+                                        <h5 class="mb-0 fw-bold text-orange">Weekly Performance</h5>
+                                    </div>
+                                    <div class="card-body p-4">
+                                        <div class="mb-3">
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <span class="text-light">Mon</span>
+                                                <span class="text-secondary">PKR 42.1k</span>
+                                            </div>
+                                            <div class="progress" style="height: 6px;">
+                                                <div class="progress-bar bg-orange" style="width: 70%"></div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <span class="text-light">Tue</span>
+                                                <span class="text-secondary">PKR 36.8k</span>
+                                            </div>
+                                            <div class="progress" style="height: 6px;">
+                                                <div class="progress-bar bg-info" style="width: 60%"></div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <span class="text-light">Wed</span>
+                                                <span class="text-secondary">PKR 48.5k</span>
+                                            </div>
+                                            <div class="progress" style="height: 6px;">
+                                                <div class="progress-bar bg-success" style="width: 78%"></div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <span class="text-light">Thu</span>
+                                                <span class="text-secondary">PKR 31.4k</span>
+                                            </div>
+                                            <div class="progress" style="height: 6px;">
+                                                <div class="progress-bar bg-warning" style="width: 52%"></div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span class="text-light">Fri</span>
+                                            <span class="text-secondary">PKR 54.2k</span>
+                                        </div>
+                                        <div class="progress" style="height: 6px;">
+                                            <div class="progress-bar bg-orange" style="width: 85%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-5">
+                                <div class="card admin-card border-0 shadow-sm h-100">
+                                    <div class="card-header bg-dark border-bottom border-secondary py-3">
+                                        <h5 class="mb-0 fw-bold text-orange">Top Products</h5>
+                                    </div>
+                                    <div class="card-body p-4">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <div>
+                                                <p class="text-light mb-1 fw-semibold">Skeleton Gold Steel</p>
+                                                <p class="text-secondary small mb-0">312 orders</p>
+                                            </div>
+                                            <span class="text-orange fw-semibold">PKR 92k</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <div>
+                                                <p class="text-light mb-1 fw-semibold">Premium Black Gold</p>
+                                                <p class="text-secondary small mb-0">248 orders</p>
+                                            </div>
+                                            <span class="text-orange fw-semibold">PKR 74k</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <div>
+                                                <p class="text-light mb-1 fw-semibold">Chronograph Precision</p>
+                                                <p class="text-secondary small mb-0">196 orders</p>
+                                            </div>
+                                            <span class="text-orange fw-semibold">PKR 61k</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <p class="text-light mb-1 fw-semibold">Black Minimalist</p>
+                                                <p class="text-secondary small mb-0">172 orders</p>
+                                            </div>
+                                            <span class="text-orange fw-semibold">PKR 49k</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="row g-4">
-                            <div class="col-12">
+                            <div class="col-12 col-lg-6">
                                 <div class="card admin-card border-0 shadow-sm">
                                     <div class="card-header bg-dark border-bottom border-secondary py-3">
                                         <h5 class="mb-0 fw-bold text-orange">Traffic Sources</h5>
@@ -685,32 +793,29 @@
                                     <div class="card-body p-4">
                                         <div class="mb-3">
                                             <div class="d-flex justify-content-between mb-2">
-                                                <span class="text-light">Direct Traffic</span>
+                                                <span class="text-light">Direct</span>
                                                 <span class="text-orange fw-semibold">45%</span>
                                             </div>
                                             <div class="progress" style="height: 8px;">
-                                                <div class="progress-bar bg-orange" style="width: 45%">
-                                                </div>
+                                                <div class="progress-bar bg-orange" style="width: 45%"></div>
                                             </div>
                                         </div>
                                         <div class="mb-3">
                                             <div class="d-flex justify-content-between mb-2">
-                                                <span class="text-light">Social Media</span>
+                                                <span class="text-light">Social</span>
                                                 <span class="text-orange fw-semibold">30%</span>
                                             </div>
                                             <div class="progress" style="height: 8px;">
-                                                <div class="progress-bar bg-info" style="width: 30%">
-                                                </div>
+                                                <div class="progress-bar bg-info" style="width: 30%"></div>
                                             </div>
                                         </div>
                                         <div class="mb-3">
                                             <div class="d-flex justify-content-between mb-2">
-                                                <span class="text-light">Search Engines</span>
+                                                <span class="text-light">Search</span>
                                                 <span class="text-orange fw-semibold">20%</span>
                                             </div>
                                             <div class="progress" style="height: 8px;">
-                                                <div class="progress-bar bg-success" style="width: 20%">
-                                                </div>
+                                                <div class="progress-bar bg-success" style="width: 20%"></div>
                                             </div>
                                         </div>
                                         <div>
@@ -719,8 +824,52 @@
                                                 <span class="text-orange fw-semibold">5%</span>
                                             </div>
                                             <div class="progress" style="height: 8px;">
-                                                <div class="progress-bar bg-warning" style="width: 5%">
-                                                </div>
+                                                <div class="progress-bar bg-warning" style="width: 5%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                                <div class="card admin-card border-0 shadow-sm h-100">
+                                    <div class="card-header bg-dark border-bottom border-secondary py-3">
+                                        <h5 class="mb-0 fw-bold text-orange">Conversion Funnel</h5>
+                                    </div>
+                                    <div class="card-body p-4">
+                                        <div class="mb-3">
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <span class="text-light">Visits</span>
+                                                <span class="text-secondary">48,200</span>
+                                            </div>
+                                            <div class="progress" style="height: 8px;">
+                                                <div class="progress-bar bg-orange" style="width: 100%"></div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <span class="text-light">Product Views</span>
+                                                <span class="text-secondary">19,450</span>
+                                            </div>
+                                            <div class="progress" style="height: 8px;">
+                                                <div class="progress-bar bg-info" style="width: 60%"></div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <span class="text-light">Add to Cart</span>
+                                                <span class="text-secondary">6,120</span>
+                                            </div>
+                                            <div class="progress" style="height: 8px;">
+                                                <div class="progress-bar bg-success" style="width: 32%"></div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <span class="text-light">Checkout</span>
+                                                <span class="text-secondary">1,540</span>
+                                            </div>
+                                            <div class="progress" style="height: 8px;">
+                                                <div class="progress-bar bg-warning" style="width: 12%"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -779,11 +928,17 @@
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="securityPasswordNew" class="form-label text-light">New Password</label>
-                                                    <input type="password" class="form-control bg-secondary border-0 text-light" id="securityPasswordNew" placeholder="New password" autocomplete="new-password">
+                                                    <div class="password-wrapper">
+                                                        <input type="password" class="form-control bg-secondary border-0 text-light" id="securityPasswordNew" placeholder="New password" autocomplete="new-password">
+                                                        <i class="bi bi-eye password-toggle" data-target="#securityPasswordNew" aria-label="Show/hide password"></i>
+                                                    </div>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="securityPasswordConfirm" class="form-label text-light">Confirm Password</label>
-                                                    <input type="password" class="form-control bg-secondary border-0 text-light" id="securityPasswordConfirm" placeholder="Confirm password" autocomplete="new-password">
+                                                    <div class="password-wrapper">
+                                                        <input type="password" class="form-control bg-secondary border-0 text-light" id="securityPasswordConfirm" placeholder="Confirm password" autocomplete="new-password">
+                                                        <i class="bi bi-eye password-toggle" data-target="#securityPasswordConfirm" aria-label="Show/hide password"></i>
+                                                    </div>
                                                 </div>
                                                 <button class="btn btn-orange" id="saveAdminPasswordBtn">
                                                     <i class="bi bi-save2 me-1"></i>Update Password

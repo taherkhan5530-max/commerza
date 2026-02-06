@@ -498,6 +498,47 @@ $(document).ready(function() {
         localStorage.setItem(resetKeyStorage, defaultResetKey);
     }
 
+    const sidebar = document.getElementById('sidebarMenu');
+    if (sidebar) {
+        sidebar.addEventListener('shown.bs.collapse', () => {
+            document.body.classList.add('sidebar-open');
+        });
+        sidebar.addEventListener('hidden.bs.collapse', () => {
+            document.body.classList.remove('sidebar-open');
+        });
+    }
+
+    function applyButtonCooldown(selector, duration = 1200) {
+        $(document).on('click', selector, function () {
+            const btn = $(this);
+            if (btn.prop('disabled')) return;
+            btn.prop('disabled', true);
+            setTimeout(() => btn.prop('disabled', false), duration);
+        });
+    }
+
+    applyButtonCooldown('#saveProductBtn');
+    applyButtonCooldown('#saveSectionBtn');
+    applyButtonCooldown('#resetSectionBtn');
+    applyButtonCooldown('#saveContactBtn');
+    applyButtonCooldown('#saveSocialBtn');
+    applyButtonCooldown('#resetSocialBtn');
+    applyButtonCooldown('#saveTickerBtn');
+    applyButtonCooldown('#resetTickerBtn');
+    applyButtonCooldown('#saveSliderBtn');
+    applyButtonCooldown('#resetSliderBtn');
+    applyButtonCooldown('#saveAdminEmailBtn');
+    applyButtonCooldown('#saveAdminPasswordBtn');
+    applyButtonCooldown('#saveAdminResetKeyBtn');
+
+    $(document).on('click', '.password-toggle', function () {
+        const target = $(this).data('target');
+        const input = $(target);
+        if (!input.length) return;
+        input.attr('type', input.attr('type') === 'password' ? 'text' : 'password');
+        $(this).toggleClass('bi-eye bi-eye-slash');
+    });
+
     loadProductsFromJSON();
     initWebsiteSettings();
     

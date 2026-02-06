@@ -260,6 +260,8 @@
           e.preventDefault();
           const errorBox = $('#resetError');
           const successBox = $('#resetSuccess');
+          const form = $(this);
+          const btn = form.find("button[type='submit']");
           const keyValue = ($('#reset-key').val() || '').toString().trim();
           const emailValue = ($('#new-admin-email').val() || '').toString().trim().toLowerCase();
           const confirmValue = ($('#confirm-admin-email').val() || '').toString().trim().toLowerCase();
@@ -267,23 +269,44 @@
           errorBox.addClass('d-none').text('');
           successBox.addClass('d-none').text('');
 
+          btn.prop('disabled', true).css({
+            "background-color": "#ff8533",
+            "cursor": "not-allowed"
+          });
+
           if (!keyValue || keyValue !== resetKey) {
             errorBox.text('Invalid reset key.').removeClass('d-none');
+            btn.prop('disabled', false).css({
+              "background-color": "#ff6600",
+              "cursor": "pointer"
+            });
             return;
           }
 
           if (!emailValue || !confirmValue) {
             errorBox.text('Please enter the new email twice.').removeClass('d-none');
+            btn.prop('disabled', false).css({
+              "background-color": "#ff6600",
+              "cursor": "pointer"
+            });
             return;
           }
 
           if (emailValue !== confirmValue) {
             errorBox.text('Emails do not match.').removeClass('d-none');
+            btn.prop('disabled', false).css({
+              "background-color": "#ff6600",
+              "cursor": "pointer"
+            });
             return;
           }
 
           if (!emailValue.includes('@')) {
             errorBox.text('Enter a valid email address.').removeClass('d-none');
+            btn.prop('disabled', false).css({
+              "background-color": "#ff6600",
+              "cursor": "pointer"
+            });
             return;
           }
 
