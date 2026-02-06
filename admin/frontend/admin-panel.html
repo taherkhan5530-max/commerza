@@ -791,6 +791,33 @@
                             </div>
                         </div>
 
+                        <div class="row g-4 mb-4">
+                            <div class="col-12">
+                                <div class="card admin-card border-0 shadow-sm">
+                                    <div class="card-header bg-dark border-bottom border-secondary py-3">
+                                        <h5 class="mb-0 fw-bold text-orange">Homepage Ticker</h5>
+                                    </div>
+                                    <div class="card-body p-4">
+                                        <div class="form-check form-switch mb-3">
+                                            <input class="form-check-input" type="checkbox" id="tickerEnabled" checked>
+                                            <label class="form-check-label text-light" for="tickerEnabled">Enable ticker</label>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="tickerMessages" class="form-label text-light">Ticker Messages</label>
+                                            <textarea class="form-control bg-secondary border-0 text-light" id="tickerMessages" rows="4" placeholder="Add one message per line"></textarea>
+                                            <small class="field-hint">Each line becomes one scroll item on the homepage.</small>
+                                        </div>
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-orange" id="saveTickerBtn">
+                                                <i class="bi bi-save2 me-1"></i>Save Ticker
+                                            </button>
+                                            <button class="btn btn-outline-secondary" id="resetTickerBtn" type="button">Reset</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="row g-4">
                             <div class="col-12">
                                 <div class="card admin-card border-0 shadow-sm">

@@ -273,12 +273,35 @@ function applySliderSettings(sliderImages) {
     }).join('');
 }
 
+function applyTickerSettings(ticker) {
+    const container = document.querySelector('.ticker-container');
+    if (!container) return;
+    const scroll = container.querySelector('.ticker-scroll');
+    if (!scroll) return;
+
+    if (!ticker) return;
+    if (ticker.enabled === false) {
+        container.style.display = 'none';
+        return;
+    }
+
+    container.style.display = '';
+    const messages = Array.isArray(ticker.messages)
+        ? ticker.messages.map(message => (message || '').trim()).filter(Boolean)
+        : [];
+
+    if (messages.length === 0) return;
+    const repeated = messages.concat(messages);
+    scroll.innerHTML = repeated.map(message => `<span>${message}</span>`).join('');
+}
+
 function applySiteSettings() {
     const settings = getSiteSettings();
     if (!settings) return;
     applyContactSettings(settings.contact);
     applySocialSettings(settings.socialLinks);
     applySliderSettings(settings.sliderImages);
+    applyTickerSettings(settings.ticker);
 }
 
 function showAccountMessage(message, type = 'success') {

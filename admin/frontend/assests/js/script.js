@@ -667,6 +667,28 @@ $(document).ready(function() {
         resetSocialForm();
     });
 
+    $('#saveTickerBtn').off('click').on('click', function() {
+        if (!siteSettings) return;
+        const enabled = $('#tickerEnabled').is(':checked');
+        const messages = $('#tickerMessages').val()
+            .split('\n')
+            .map(line => line.trim())
+            .filter(Boolean);
+
+        if (messages.length === 0) {
+            showNotification('Please add at least one ticker message', 'danger');
+            return;
+        }
+
+        siteSettings.ticker = { enabled, messages };
+        saveSiteSettings();
+        showNotification('Ticker updated!', 'success');
+    });
+
+    $('#resetTickerBtn').on('click', function() {
+        resetTickerForm();
+    });
+
     $('#saveSliderBtn').off('click').on('click', function() {
         if (!siteSettings) return;
         const id = $('#sliderId').val();
@@ -953,6 +975,14 @@ function buildDefaultSiteSettings() {
             email: 'commerza.ahmer@gmail.com',
             phone: '+92 314 8396293'
         },
+        ticker: {
+            enabled: true,
+            messages: [
+                'SALE IS LIVE: PREMIUM AUTOMATIC WATCHES UP TO 20% OFF',
+                'COLLECTION UPDATE: NEW SKELETON SERIES NOW AVAILABLE',
+                'FREE SHIPPING: NATIONWIDE DELIVERY ON ALL PREMIUM ORDERS'
+            ]
+        },
         socialLinks: [
             { id: 1, label: 'Facebook', url: 'https://www.facebook.com/commerza.ahmer', icon: 'bi bi-facebook' },
             { id: 2, label: 'X', url: 'https://x.com/commerza_ahmer', icon: 'bi bi-twitter' },
@@ -1004,6 +1034,13 @@ function loadSiteSettings() {
             ...defaults,
             ...parsed,
             contact: { ...defaults.contact, ...(parsed.contact || {}) },
+            ticker: {
+                ...defaults.ticker,
+                ...(parsed.ticker || {}),
+                messages: Array.isArray(parsed.ticker?.messages) && parsed.ticker.messages.length
+                    ? parsed.ticker.messages
+                    : defaults.ticker.messages
+            },
             socialLinks: Array.isArray(parsed.socialLinks) ? parsed.socialLinks : defaults.socialLinks,
             sliderImages: Array.isArray(parsed.sliderImages) ? parsed.sliderImages : defaults.sliderImages
         };
@@ -1028,8 +1065,17 @@ function initWebsiteSettings() {
     $('#siteEmail').val(siteSettings.contact.email || '');
     $('#sitePhone').val(siteSettings.contact.phone || '');
 
+    $('#tickerEnabled').prop('checked', siteSettings.ticker?.enabled !== false);
+    $('#tickerMessages').val((siteSettings.ticker?.messages || []).join('\n'));
+
     renderSocialLinksTable();
     renderSliderTable();
+}
+
+function resetTickerForm() {
+    const defaults = buildDefaultSiteSettings();
+    $('#tickerEnabled').prop('checked', defaults.ticker.enabled);
+    $('#tickerMessages').val(defaults.ticker.messages.join('\n'));
 }
 
 function renderSocialLinksTable() {
