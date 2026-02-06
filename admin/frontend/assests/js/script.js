@@ -479,6 +479,25 @@ function updateNotifications() {
 }
 
 $(document).ready(function() {
+    const config = window.CommerzaAdminConfig || {};
+    const authKey = 'commerza_admin_auth';
+    const emailKey = 'commerza_admin_email';
+    const passwordKey = 'commerza_admin_password';
+    const resetKeyStorage = 'commerza_admin_reset_key';
+    const defaultEmail = (config.adminEmailDefault || 'commerza.ahmer@gmail.com').toLowerCase();
+    const defaultPassword = config.adminPasswordDefault || 'Commerza@2026';
+    const defaultResetKey = config.resetKey || 'COMMERZA-RESET-2026';
+
+    if (!localStorage.getItem(emailKey)) {
+        localStorage.setItem(emailKey, defaultEmail);
+    }
+    if (!localStorage.getItem(passwordKey)) {
+        localStorage.setItem(passwordKey, defaultPassword);
+    }
+    if (!localStorage.getItem(resetKeyStorage)) {
+        localStorage.setItem(resetKeyStorage, defaultResetKey);
+    }
+
     loadProductsFromJSON();
     initWebsiteSettings();
     
@@ -734,6 +753,94 @@ $(document).ready(function() {
 
     $('#resetSliderBtn').on('click', function() {
         resetSliderForm();
+    });
+
+    $('#saveAdminEmailBtn').on('click', function() {
+        const currentPassword = $('#securityEmailPassword').val();
+        const resetKey = $('#securityEmailResetKey').val();
+        const newEmail = ($('#securityEmailNew').val() || '').trim().toLowerCase();
+        const confirmEmail = ($('#securityEmailConfirm').val() || '').trim().toLowerCase();
+
+        const storedPassword = localStorage.getItem(passwordKey) || defaultPassword;
+        const storedResetKey = localStorage.getItem(resetKeyStorage) || defaultResetKey;
+
+        if (!currentPassword || !resetKey) {
+            showNotification('Password and reset key are required', 'danger');
+            return;
+        }
+
+        if (currentPassword !== storedPassword || resetKey !== storedResetKey) {
+            showNotification('Invalid password or reset key', 'danger');
+            return;
+        }
+
+        if (!newEmail || !confirmEmail || newEmail !== confirmEmail || !newEmail.includes('@')) {
+            showNotification('Enter a valid matching email', 'danger');
+            return;
+        }
+
+        localStorage.setItem(emailKey, newEmail);
+        const authData = JSON.parse(localStorage.getItem(authKey) || '{}');
+        authData.email = newEmail;
+        authData.loggedInAt = authData.loggedInAt || new Date().toISOString();
+        localStorage.setItem(authKey, JSON.stringify(authData));
+        showNotification('Admin email updated!', 'success');
+    });
+
+    $('#saveAdminPasswordBtn').on('click', function() {
+        const currentEmail = ($('#securityPasswordEmail').val() || '').trim().toLowerCase();
+        const resetKey = $('#securityPasswordResetKey').val();
+        const newPassword = $('#securityPasswordNew').val();
+        const confirmPassword = $('#securityPasswordConfirm').val();
+
+        const storedEmail = (localStorage.getItem(emailKey) || defaultEmail).toLowerCase();
+        const storedResetKey = localStorage.getItem(resetKeyStorage) || defaultResetKey;
+
+        if (!currentEmail || !resetKey) {
+            showNotification('Email and reset key are required', 'danger');
+            return;
+        }
+
+        if (currentEmail !== storedEmail || resetKey !== storedResetKey) {
+            showNotification('Invalid email or reset key', 'danger');
+            return;
+        }
+
+        if (!newPassword || newPassword !== confirmPassword) {
+            showNotification('Passwords do not match', 'danger');
+            return;
+        }
+
+        localStorage.setItem(passwordKey, newPassword);
+        showNotification('Admin password updated!', 'success');
+    });
+
+    $('#saveAdminResetKeyBtn').on('click', function() {
+        const currentEmail = ($('#securityKeyEmail').val() || '').trim().toLowerCase();
+        const currentPassword = $('#securityKeyPassword').val();
+        const newKey = ($('#securityKeyNew').val() || '').trim();
+        const confirmKey = ($('#securityKeyConfirm').val() || '').trim();
+
+        const storedEmail = (localStorage.getItem(emailKey) || defaultEmail).toLowerCase();
+        const storedPassword = localStorage.getItem(passwordKey) || defaultPassword;
+
+        if (!currentEmail || !currentPassword) {
+            showNotification('Email and password are required', 'danger');
+            return;
+        }
+
+        if (currentEmail !== storedEmail || currentPassword !== storedPassword) {
+            showNotification('Invalid email or password', 'danger');
+            return;
+        }
+
+        if (!newKey || newKey !== confirmKey) {
+            showNotification('Reset keys do not match', 'danger');
+            return;
+        }
+
+        localStorage.setItem(resetKeyStorage, newKey);
+        showNotification('Reset key updated!', 'success');
     });
 });
 

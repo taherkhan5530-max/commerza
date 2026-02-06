@@ -3,7 +3,6 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noindex, nofollow">
   <meta name="author" content="Syed Ahmer Shah">
   <meta name="referrer" content="no-referrer">
@@ -11,10 +10,10 @@
   <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://cdn.jsdelivr.net https://code.jquery.com https://fonts.googleapis.com https://fonts.gstatic.com; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; script-src 'self' 'unsafe-inline' https://code.jquery.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net data:; connect-src 'self' https://cdn.jsdelivr.net; base-uri 'self'; form-action 'self'">
   <meta name="csrf-token" content="">
-  <title>Admin Login | Commerza</title>
+  <title>Admin Forgot Email | Commerza</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="icon" href="assests/images/favicon/commerza-watches-icon.ico" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -48,7 +47,7 @@
       }
     }
 
-    .login-card {
+    .forgot-card {
       background: linear-gradient(145deg, #1a1a1a 0%, #0a0a0a 100%);
       border: 1px solid rgba(255, 69, 0, 0.2);
       border-radius: 12px;
@@ -74,7 +73,7 @@
       }
     }
 
-    .login-title {
+    .forgot-title {
       font-family: 'Montserrat', sans-serif;
       font-size: 32px;
       font-weight: 900;
@@ -96,7 +95,6 @@
       -webkit-text-fill-color: transparent;
       animation: h1-shine 4s linear infinite;
       margin-bottom: 5px;
-      user-select: none;
     }
 
     @keyframes h1-shine {
@@ -105,7 +103,7 @@
       }
     }
 
-    .login-subtitle {
+    .forgot-subtitle {
       font-family: 'JetBrains Mono', monospace;
       color: #888;
       text-align: center;
@@ -140,35 +138,7 @@
       outline: none;
     }
 
-    .password-wrapper {
-      position: relative;
-      width: 100%;
-      display: flex;
-      align-items: center;
-    }
-
-    #user-login-password {
-      padding-right: 40px !important;
-    }
-
-    #togglePassword {
-      position: absolute;
-      right: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      cursor: pointer;
-      color: #ff4500;
-      z-index: 10;
-      font-size: 18px;
-      line-height: 1;
-      transition: all 0.3s ease;
-    }
-
-    #togglePassword:hover {
-      color: #ffcc00;
-    }
-
-    .login-btn {
+    .reset-btn {
       background: #000 !important;
       border: 1px solid #ff4500 !important;
       color: #fff !important;
@@ -182,24 +152,24 @@
       overflow: hidden;
     }
 
-    .login-btn:hover {
+    .reset-btn:hover {
       background: linear-gradient(90deg, #ff4500, #ffcc00) !important;
       color: #000 !important;
       transform: translateY(-3px);
       box-shadow: 0 10px 20px rgba(255, 69, 0, 0.4);
     }
 
-    .login-btn:active {
+    .reset-btn:active {
       transform: scale(0.95);
     }
 
-    .login-links {
+    .forgot-links {
       text-align: center;
       margin-top: 25px;
       width: 100%;
     }
 
-    .login-links p {
+    .forgot-links p {
       margin-bottom: 8px;
       display: block;
       color: #888;
@@ -207,7 +177,7 @@
       font-family: 'Inter', sans-serif;
     }
 
-    .login-links a {
+    .forgot-links a {
       color: #ff4500;
       font-family: 'Montserrat', sans-serif;
       font-weight: 700;
@@ -218,59 +188,51 @@
       margin-left: 2px;
     }
 
-    .login-links a:hover {
+    .forgot-links a:hover {
       color: #ffcc00;
       text-decoration: underline;
       text-shadow: 0 0 10px rgba(255, 69, 0, 0.5);
-    }
-
-    input::placeholder {
-      font-family: 'Inter', sans-serif;
-      color: #555 !important;
-    }
-
-    input[type="password"]::-ms-reveal,
-    input[type="password"]::-ms-clear {
-      display: none;
     }
   </style>
 </head>
 
 <body class="dark-theme">
-  <div class="login-card">
-    <h1 class="login-title">COMMERZA</h1>
-    <p class="login-subtitle">Commerza Admin Portal</p>
-    <div class="alert alert-danger py-2 px-3 small d-none" id="loginError" role="alert"></div>
+  <div class="forgot-card">
+    <h1 class="forgot-title">COMMERZA</h1>
+    <p class="forgot-subtitle">Admin Email Recovery</p>
+    <div class="alert alert-danger py-2 px-3 small d-none" id="resetError" role="alert"></div>
+    <div class="alert alert-success py-2 px-3 small d-none" id="resetSuccess" role="alert"></div>
 
-    <form action="/admin/admin-login" method="POST">
+    <form action="/admin/admin-forgot-email" method="POST" id="forgotEmailForm">
       <input type="hidden" name="csrf_token" id="csrfToken" value="">
       <div class="mb-3">
-        <label for="admin-email" class="form-label">Email Address</label>
-        <input type="email" class="form-control" id="admin-email" name="admin_email" placeholder="Enter your email"
-          required autocomplete="email" autofocus />
+        <label for="reset-key" class="form-label">Reset Key</label>
+        <input type="password" class="form-control" id="reset-key" name="reset_key" placeholder="Enter secret key"
+          required />
       </div>
 
       <div class="mb-3">
-        <label for="admin-password" class="form-label">Password</label>
-        <div class="password-wrapper">
-          <input type="password" class="form-control" id="admin-password" name="admin_password"
-            placeholder="Enter your password" required autocomplete="current-password" autocorrect="off"
-            autocapitalize="off" spellcheck="false" />
+        <label for="new-admin-email" class="form-label">New Admin Email</label>
+        <input type="email" class="form-control" id="new-admin-email" name="new_admin_email"
+          placeholder="Enter new email" required autocomplete="email" />
+      </div>
 
-          <i class="bi bi-eye" id="togglePassword" aria-label="Show/hide password"></i>
-        </div>
+      <div class="mb-3">
+        <label for="confirm-admin-email" class="form-label">Confirm Email</label>
+        <input type="email" class="form-control" id="confirm-admin-email" name="confirm_admin_email"
+          placeholder="Re-enter new email" required autocomplete="email" />
       </div>
 
       <div class="d-grid">
-        <button type="submit" class="btn login-btn">Login</button>
+        <button type="submit" class="btn reset-btn">Reset Email</button>
       </div>
 
-      <div class="login-links">
+      <div class="forgot-links">
         <p class="mt-3 mb-1">
-          <a href="admin-forgot-password.html">Forgot Password?</a>
+          <a href="admin-login.html">Back to Login</a>
         </p>
         <p class="mb-0">
-          <a href="admin-forgot-email.html">Forgot Email?</a>
+          <a href="admin-forgot-password.html">Forgot Password?</a>
         </p>
       </div>
     </form>
@@ -280,19 +242,11 @@
       $(document).ready(function () {
         const config = window.CommerzaAdminConfig || {};
         const csrfKey = 'commerza_admin_csrf';
-        const authKey = 'commerza_admin_auth';
         const emailKey = 'commerza_admin_email';
-        const passwordKey = 'commerza_admin_password';
-        const defaultEmail = (config.adminEmailDefault || 'commerza.ahmer@gmail.com').toLowerCase();
-        const defaultPassword = config.adminPasswordDefault || 'Commerza@2026';
-        const storedEmail = (localStorage.getItem(emailKey) || defaultEmail).toLowerCase();
-        if (!localStorage.getItem(emailKey)) {
-          localStorage.setItem(emailKey, storedEmail);
-        }
-        if (!localStorage.getItem(passwordKey)) {
-          localStorage.setItem(passwordKey, defaultPassword);
-        }
-        const allowedEmail = storedEmail;
+        const authKey = 'commerza_admin_auth';
+        const resetKeyStorage = 'commerza_admin_reset_key';
+        const resetKey = localStorage.getItem(resetKeyStorage) || config.resetKey || 'COMMERZA-RESET-2026';
+
         let csrfToken = sessionStorage.getItem(csrfKey);
         if (!csrfToken) {
           const rand = (crypto && crypto.randomUUID) ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -302,56 +256,44 @@
         $('meta[name="csrf-token"]').attr('content', csrfToken);
         $('#csrfToken').val(csrfToken);
 
-        const existingAuth = localStorage.getItem(authKey);
-        if (existingAuth) {
-          window.location.replace('admin-panel.html');
-        }
-
-        $("#togglePassword").click(function () {
-          $("#admin-password").attr("type", $("#admin-password").attr("type") === "password" ? "text" : "password");
-          $(this).toggleClass("bi-eye bi-eye-slash");
-        });
-
-        $("form").on("submit", function (e) {
+        $('#forgotEmailForm').on('submit', function (e) {
           e.preventDefault();
-          const form = $(this);
-          const btn = form.find("button[type='submit']");
-          const emailInput = $('#admin-email');
-          const passwordInput = $('#admin-password');
-          const errorBox = $('#loginError');
-          const emailValue = (emailInput.val() || '').toString().trim().toLowerCase();
-          const passwordValue = (passwordInput.val() || '').toString();
-          const storedPassword = localStorage.getItem(passwordKey) || defaultPassword;
+          const errorBox = $('#resetError');
+          const successBox = $('#resetSuccess');
+          const keyValue = ($('#reset-key').val() || '').toString().trim();
+          const emailValue = ($('#new-admin-email').val() || '').toString().trim().toLowerCase();
+          const confirmValue = ($('#confirm-admin-email').val() || '').toString().trim().toLowerCase();
 
           errorBox.addClass('d-none').text('');
+          successBox.addClass('d-none').text('');
 
-          if (emailValue !== allowedEmail) {
-            errorBox.text('Access denied. Use the authorized admin email.').removeClass('d-none');
+          if (!keyValue || keyValue !== resetKey) {
+            errorBox.text('Invalid reset key.').removeClass('d-none');
             return;
           }
 
-          if (passwordValue !== storedPassword) {
-            errorBox.text('Invalid password.').removeClass('d-none');
+          if (!emailValue || !confirmValue) {
+            errorBox.text('Please enter the new email twice.').removeClass('d-none');
             return;
           }
 
-          btn.prop("disabled", true).css({
-            "background-color": "#ff8533",
-            "cursor": "not-allowed"
-          });
+          if (emailValue !== confirmValue) {
+            errorBox.text('Emails do not match.').removeClass('d-none');
+            return;
+          }
+
+          if (!emailValue.includes('@')) {
+            errorBox.text('Enter a valid email address.').removeClass('d-none');
+            return;
+          }
+
+          localStorage.setItem(emailKey, emailValue);
+          localStorage.removeItem(authKey);
+          successBox.text('Admin email updated. Please log in again.').removeClass('d-none');
 
           setTimeout(() => {
-            const authPayload = {
-              email: emailValue,
-              loggedInAt: new Date().toISOString()
-            };
-            localStorage.setItem(authKey, JSON.stringify(authPayload));
-            btn.prop("disabled", false).css({
-              "background-color": "#ff6600",
-              "cursor": "pointer"
-            });
-            window.location.href = 'admin-panel.html';
-          }, 800);
+            window.location.href = 'admin-login.html';
+          }, 1200);
         });
       });
     </script>

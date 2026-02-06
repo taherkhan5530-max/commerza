@@ -14,13 +14,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assests/css/style.css">
+    <script src="assests/js/admin-config.js"></script>
 </head>
 
 <body class="dark-theme">
     <script>
         (function () {
+            const config = window.CommerzaAdminConfig || {};
             const authKey = 'commerza_admin_auth';
-            const allowedEmail = 'commerza.ahmer@gmail.com';
+            const emailKey = 'commerza_admin_email';
+            const defaultEmail = (config.adminEmailDefault || 'commerza.ahmer@gmail.com').toLowerCase();
+            const storedEmail = (localStorage.getItem(emailKey) || defaultEmail).toLowerCase();
+            if (!localStorage.getItem(emailKey)) {
+                localStorage.setItem(emailKey, storedEmail);
+            }
+            const allowedEmail = storedEmail;
             let authData = null;
             try {
                 authData = JSON.parse(localStorage.getItem(authKey));
@@ -108,6 +116,15 @@
                                     type="button" aria-controls="websiteSection" aria-selected="false">
                                     <i class="bi bi-globe2 me-2 fs-5"></i>
                                     <span>Website</span>
+                                </button>
+                            </li>
+                            <li class="nav-item mb-1">
+                                <button
+                                    class="nav-link rounded-2 d-flex align-items-center py-2 px-3 w-100 text-start border-0"
+                                    id="homepage-tab" data-bs-toggle="pill" data-bs-target="#homepageSection"
+                                    type="button" aria-controls="homepageSection" aria-selected="false">
+                                    <i class="bi bi-house-door me-2 fs-5"></i>
+                                    <span>Homepage</span>
                                 </button>
                             </li>
                         </ul>
@@ -716,11 +733,92 @@
                         <div class="helper-banner mb-4">
                             <div>
                                 <h5 class="mb-2 text-light">Website settings</h5>
-                                <p class="mb-0 text-secondary">Keep your contact info, social links, and homepage slider up to date.</p>
+                                <p class="mb-0 text-secondary">Manage security, contact info, and social links.</p>
                             </div>
                             <span class="step-chip">Tip: Save after every change so the website updates.</span>
                         </div>
-                        <div class="row g-4 mb-4">
+                        <div class="row g-4 mt-1">
+                            <div class="col-12">
+                                <div class="card admin-card border-0 shadow-sm">
+                                    <div class="card-header bg-dark border-bottom border-secondary py-3">
+                                        <h5 class="mb-0 fw-bold text-orange">Security Controls</h5>
+                                    </div>
+                                    <div class="card-body p-4">
+                                        <div class="row g-4">
+                                            <div class="col-12 col-lg-4">
+                                                <h6 class="text-light fw-bold mb-3">Change Admin Email</h6>
+                                                <div class="mb-3">
+                                                    <label for="securityEmailPassword" class="form-label text-light">Current Password</label>
+                                                    <input type="password" class="form-control bg-secondary border-0 text-light" id="securityEmailPassword" placeholder="Enter current password" autocomplete="new-password">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="securityEmailResetKey" class="form-label text-light">Reset Key</label>
+                                                    <input type="password" class="form-control bg-secondary border-0 text-light" id="securityEmailResetKey" placeholder="Enter reset key" autocomplete="off">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="securityEmailNew" class="form-label text-light">New Email</label>
+                                                    <input type="email" class="form-control bg-secondary border-0 text-light" id="securityEmailNew" placeholder="name@example.com" autocomplete="off">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="securityEmailConfirm" class="form-label text-light">Confirm Email</label>
+                                                    <input type="email" class="form-control bg-secondary border-0 text-light" id="securityEmailConfirm" placeholder="name@example.com" autocomplete="off">
+                                                </div>
+                                                <button class="btn btn-orange" id="saveAdminEmailBtn">
+                                                    <i class="bi bi-save2 me-1"></i>Update Email
+                                                </button>
+                                            </div>
+                                            <div class="col-12 col-lg-4">
+                                                <h6 class="text-light fw-bold mb-3">Change Admin Password</h6>
+                                                <div class="mb-3">
+                                                    <label for="securityPasswordEmail" class="form-label text-light">Current Email</label>
+                                                    <input type="email" class="form-control bg-secondary border-0 text-light" id="securityPasswordEmail" placeholder="admin email" autocomplete="off">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="securityPasswordResetKey" class="form-label text-light">Reset Key</label>
+                                                    <input type="password" class="form-control bg-secondary border-0 text-light" id="securityPasswordResetKey" placeholder="Enter reset key" autocomplete="off">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="securityPasswordNew" class="form-label text-light">New Password</label>
+                                                    <input type="password" class="form-control bg-secondary border-0 text-light" id="securityPasswordNew" placeholder="New password" autocomplete="new-password">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="securityPasswordConfirm" class="form-label text-light">Confirm Password</label>
+                                                    <input type="password" class="form-control bg-secondary border-0 text-light" id="securityPasswordConfirm" placeholder="Confirm password" autocomplete="new-password">
+                                                </div>
+                                                <button class="btn btn-orange" id="saveAdminPasswordBtn">
+                                                    <i class="bi bi-save2 me-1"></i>Update Password
+                                                </button>
+                                            </div>
+                                            <div class="col-12 col-lg-4">
+                                                <h6 class="text-light fw-bold mb-3">Rotate Reset Key</h6>
+                                                <div class="mb-3">
+                                                    <label for="securityKeyEmail" class="form-label text-light">Current Email</label>
+                                                    <input type="email" class="form-control bg-secondary border-0 text-light" id="securityKeyEmail" placeholder="admin email" autocomplete="off">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="securityKeyPassword" class="form-label text-light">Current Password</label>
+                                                    <input type="password" class="form-control bg-secondary border-0 text-light" id="securityKeyPassword" placeholder="Enter current password" autocomplete="new-password">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="securityKeyNew" class="form-label text-light">New Reset Key</label>
+                                                    <input type="text" class="form-control bg-secondary border-0 text-light" id="securityKeyNew" placeholder="New reset key" autocomplete="off">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="securityKeyConfirm" class="form-label text-light">Confirm Reset Key</label>
+                                                    <input type="text" class="form-control bg-secondary border-0 text-light" id="securityKeyConfirm" placeholder="Confirm reset key" autocomplete="off">
+                                                </div>
+                                                <button class="btn btn-orange" id="saveAdminResetKeyBtn">
+                                                    <i class="bi bi-save2 me-1"></i>Update Reset Key
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <p class="field-hint mt-3">For now, this is local-only. Backend email OTP will replace reset key checks later.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-4 mb-4 mt-3">
                             <div class="col-12 col-lg-6">
                                 <div class="card admin-card border-0 shadow-sm h-100">
                                     <div class="card-header bg-dark border-bottom border-secondary py-3">
@@ -790,7 +888,15 @@
                                 </div>
                             </div>
                         </div>
-
+                    </div>
+                    <div class="tab-pane fade" id="homepageSection">
+                        <div class="helper-banner mb-4">
+                            <div>
+                                <h5 class="mb-2 text-light">Homepage content</h5>
+                                <p class="mb-0 text-secondary">Update the ticker and homepage slider.</p>
+                            </div>
+                            <span class="step-chip">Tip: Keep messages short for smooth scrolling.</span>
+                        </div>
                         <div class="row g-4 mb-4">
                             <div class="col-12">
                                 <div class="card admin-card border-0 shadow-sm">
@@ -849,11 +955,11 @@
                                             </div>
                                             <div class="col-12 col-lg-2">
                                                 <label for="sliderButtonText" class="form-label text-light">Button Text</label>
-                                                <input type="text" class="form-control bg-secondary border-0 text-light" id="sliderButtonText" placeholder="Explore Now">
+                                                <input type="text" class="form-control bg-secondary border-0 text-light" id="sliderButtonText" placeholder="Explore Now" autocomplete="off">
                                             </div>
                                             <div class="col-12 col-lg-2">
                                                 <label for="sliderButtonLink" class="form-label text-light">Button Link</label>
-                                                <input type="text" class="form-control bg-secondary border-0 text-light" id="sliderButtonLink" placeholder="shop-category-a.html">
+                                                <input type="text" class="form-control bg-secondary border-0 text-light" id="sliderButtonLink" placeholder="shop-category-a.html" autocomplete="off">
                                             </div>
                                         </div>
                                         <div class="d-flex gap-2 mt-3">
