@@ -113,7 +113,7 @@ const ADMIN_PAGES = [
     { id: 'wishlist.html', label: 'Wishlist' },
     { id: 'order-tracking.html', label: 'Order Tracking' },
     { id: 'compare.html', label: 'Compare' },
-    { id: 'account.html', label: 'Account' }
+    { id: 'index.html', label: 'Home' }
 ];
 // Notification timing rules keep the bell focused on recent actions.
 const NOTIFICATION_RULES = {
@@ -607,7 +607,7 @@ function calculateDashboardMetrics() {
     });
     const totalCustomers = customerSet.size;
     
-    document.getElementById('totalRevenueValue').textContent = 'PKR ' + totalRevenue.toLocaleString();
+    document.getElementById('totalRevenueValue').textContent = 'BDT ' + totalRevenue.toLocaleString();
     
     document.getElementById('totalOrdersValue').textContent = totalOrdersCount;
     
@@ -677,7 +677,7 @@ function saveProductsToJSON() {
     const dataToSave = {
         meta: {
             total: productsData.length,
-            currency: "PKR",
+            currency: "BDT",
             lastUpdated: new Date().toISOString().split('T')[0]
         },
         sections: allSections.map(section => ({
@@ -892,7 +892,7 @@ function exportProductsData() {
     const dataToExport = {
         meta: {
             total: productsData.length,
-            currency: "PKR",
+            currency: "BDT",
             exportedDate: new Date().toISOString().split('T')[0],
             exportedTime: new Date().toLocaleTimeString()
         },
@@ -1044,7 +1044,7 @@ $(document).ready(function() {
     const emailKey = 'commerza_admin_email';
     const passwordKey = 'commerza_admin_password';
     const resetKeyStorage = 'commerza_admin_reset_key';
-    const defaultEmail = (config.adminEmailDefault || 'commerza.ahmer@gmail.com').toLowerCase();
+    const defaultEmail = (config.adminEmailDefault || 'taherkhan5530@gmail.com').toLowerCase();
     const defaultPassword = config.adminPasswordDefault || 'Commerza@2026';
     const defaultResetKey = config.resetKey || 'COMMERZA-RESET-2026';
 
@@ -1488,7 +1488,7 @@ function displayRecentOrders() {
             <td class="ps-4 py-3 fw-semibold text-light">${order.orderId}</td>
             <td class="py-3 text-light">${order.customerName.split(' ')[0]}</td>
             <td class="py-3 text-secondary small">${order.orderDate}</td>
-            <td class="py-3 text-light fw-semibold">PKR ${order.total.toLocaleString()}</td>
+            <td class="py-3 text-light fw-semibold">BDT ${order.total.toLocaleString()}</td>
             <td class="pe-4 py-3">
                 <span class="badge ${statusColor} rounded-pill px-3 py-2">${order.status}</span>
             </td>
@@ -1515,7 +1515,7 @@ function displayRecentOrders() {
                                 <img src="${imgSrc}" alt="${item.name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px; background-color: #333;" onerror="this.src='https://via.placeholder.com/50?text=No+Image';">
                                 <div style="flex: 1;">
                                     <p class="text-light fw-semibold mb-1" style="font-size: 0.95rem;">${item.name}</p>
-                                    <p class="text-secondary mb-0" style="font-size: 0.85rem;">Price: <strong class="text-orange">PKR ${price.toLocaleString()}</strong> × <strong>${qty}</strong> = <strong class="text-orange">PKR ${lineTotal.toLocaleString()}</strong></p>
+                                    <p class="text-secondary mb-0" style="font-size: 0.85rem;">Price: <strong class="text-orange">BDT ${price.toLocaleString()}</strong> × <strong>${qty}</strong> = <strong class="text-orange">BDT ${lineTotal.toLocaleString()}</strong></p>
                                 </div>
                             </div>
                         `;
@@ -1550,7 +1550,7 @@ function displayAllOrders() {
             <td class="ps-4 py-3 fw-semibold text-light">${order.orderId}</td>
             <td class="py-3 text-light">${order.customerName}</td>
             <td class="py-3 text-secondary small">${order.orderDate}</td>
-            <td class="py-3 text-light fw-semibold">PKR ${order.total.toLocaleString()}</td>
+            <td class="py-3 text-light fw-semibold">BDT ${order.total.toLocaleString()}</td>
             <td class="py-3"><span class="badge bg-info text-dark rounded-pill">${order.paymentMethod}</span></td>
             <td class="py-3"><span class="badge ${statusColor} rounded-pill">${order.status}</span></td>
             <td class="pe-4 py-3">
@@ -1578,9 +1578,9 @@ function displayAllOrders() {
                         </div>
                         <div class="col-md-6">
                             <h6 class="text-orange mb-3 fw-bold">💳 Order Summary</h6>
-                            <p class="text-secondary mb-1"><strong class="text-light">Subtotal:</strong> PKR ${order.subtotal.toLocaleString()}</p>
-                            <p class="text-secondary mb-1"><strong class="text-light">Shipping:</strong> PKR ${order.shipping}</p>
-                            <p class="text-orange fw-bold"><strong>Total:</strong> PKR ${order.total.toLocaleString()}</p>
+                            <p class="text-secondary mb-1"><strong class="text-light">Subtotal:</strong> BDT ${order.subtotal.toLocaleString()}</p>
+                            <p class="text-secondary mb-1"><strong class="text-light">Shipping:</strong> BDT ${order.shipping}</p>
+                            <p class="text-orange fw-bold"><strong>Total:</strong> BDT ${order.total.toLocaleString()}</p>
                             <div style="margin-top: 15px;">
                                 <h6 class="text-orange mb-2 fw-bold">📊 Change Status</h6>
                                 <div style="display: flex; gap: 8px; flex-wrap: wrap;">
@@ -1605,7 +1605,7 @@ function displayAllOrders() {
                                 <img src="${imgSrc}" alt="${item.name}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px; background-color: #333;" onerror="this.src='https://via.placeholder.com/60?text=No+Image';">
                                 <div style="flex: 1;">
                                     <p class="text-light fw-semibold mb-1" style="font-size: 0.95rem;">${item.name}</p>
-                                    <p class="text-secondary mb-0" style="font-size: 0.9rem;"><strong>Unit Price:</strong> PKR ${price.toLocaleString()} | <strong>Quantity:</strong> ${qty} | <strong class="text-orange">Total: PKR ${lineTotal.toLocaleString()}</strong></p>
+                                    <p class="text-secondary mb-0" style="font-size: 0.9rem;"><strong>Unit Price:</strong> BDT ${price.toLocaleString()} | <strong>Quantity:</strong> ${qty} | <strong class="text-orange">Total: BDT ${lineTotal.toLocaleString()}</strong></p>
                                 </div>
                             </div>
                         `;
@@ -1660,7 +1660,7 @@ function displayAllCustomers() {
             <td class="py-3 text-secondary">${customer.email || 'N/A'}</td>
             <td class="py-3 text-secondary">${customer.phone || 'N/A'}</td>
             <td class="py-3 text-light">${customer.orderCount}</td>
-            <td class="pe-4 py-3 text-light fw-semibold">PKR ${customer.totalSpent.toLocaleString()}</td>
+            <td class="pe-4 py-3 text-light fw-semibold">BDT ${customer.totalSpent.toLocaleString()}</td>
         `;
         tbody.appendChild(row);
     });
@@ -1704,9 +1704,9 @@ function buildDefaultSiteSettings() {
             favicon: 'frontend/assets/images/favicon/commerza-watches-icon.ico'
         },
         contact: {
-            address: 'Barrage Colony, HYD, PK',
-            email: 'commerza.ahmer@gmail.com',
-            phone: '+92 314 8396293'
+            address: 'Golapganj,Sylhet,Bangladesh',
+            email: 'taherkhan5530@gmail.com',
+            phone: '+8801946325530'
         },
         ticker: {
             enabled: true,

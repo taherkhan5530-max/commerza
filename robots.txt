@@ -4,7 +4,6 @@ Disallow: /login.html
 Disallow: /signup.html
 Disallow: /forgot-password.html
 Disallow: /cart.html
-Disallow: /account.html
 Disallow: /order-tracking.html
 Disallow: /wishlist.html
 Disallow: /compare.html
@@ -24,7 +23,6 @@ Disallow: /login.html
 Disallow: /signup.html
 Disallow: /forgot-password.html
 Disallow: /cart.html
-Disallow: /account.html
 Disallow: /order-tracking.html
 Disallow: /wishlist.html
 Disallow: /compare.html
@@ -36,7 +34,6 @@ Disallow: /login.html
 Disallow: /signup.html
 Disallow: /forgot-password.html
 Disallow: /cart.html
-Disallow: /account.html
 Disallow: /order-tracking.html
 Disallow: /wishlist.html
 Disallow: /compare.html

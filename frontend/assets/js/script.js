@@ -1,5 +1,22 @@
 const SITE_SETTINGS_KEY = "commerza_site_settings";
 
+// Telegram global config (used for newsletter/order notifications)
+window.TELEGRAM_BOT_TOKEN = window.TELEGRAM_BOT_TOKEN || '8446990106:AAGG3m22l_h6LamFhz_yhh4fk4FIajUvwlA';
+window.TELEGRAM_CHAT_ID = window.TELEGRAM_CHAT_ID || '7523957607';
+
+window.sendTelegramNotification = window.sendTelegramNotification || function (text) {
+  try {
+    if (!window.TELEGRAM_BOT_TOKEN || !window.TELEGRAM_CHAT_ID) return;
+    fetch(`https://api.telegram.org/bot${window.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: window.TELEGRAM_CHAT_ID, text }),
+    }).catch((err) => console.warn('Telegram send error', err));
+  } catch (e) {
+    console.warn('Telegram send exception', e);
+  }
+};
+
 (function () {
   if (window.CommerzaAuth) return;
 
@@ -81,12 +98,14 @@ const SITE_SETTINGS_KEY = "commerza_site_settings";
 
   function getCurrentUser() {
     const session = localStorage.getItem(SESSION_KEY);
-    if (!session) return null;
+    if (!session) {
+      return { id: 0, name: 'Customer', email: 'customer@local', phone: '' };
+    }
     try {
       const parsed = JSON.parse(session);
-      return findUserByEmail(parsed.email);
+      return findUserByEmail(parsed.email) || { id: 0, name: 'Customer', email: 'customer@local', phone: '' };
     } catch (error) {
-      return null;
+      return { id: 0, name: 'Customer', email: 'customer@local', phone: '' };
     }
   }
 
@@ -495,7 +514,7 @@ function renderAccountOrders(user) {
                         </div>
                         <div class="text-end">
                             <span class="badge bg-${order.status === "Delivered" ? "success" : order.status === "Cancelled" ? "danger" : "warning"} rounded-pill">${order.status}</span>
-                            <p class="text-white fw-bold mt-2">PKR ${order.total.toLocaleString()}</p>
+                            <p class="text-white fw-bold mt-2">BDT ${order.total.toLocaleString()}</p>
                         </div>
                     </div>
                     <div class="mt-3">
@@ -506,7 +525,7 @@ function renderAccountOrders(user) {
                                 <img src="${item.image}" alt="${item.name}" style="width: 48px; height: 48px; object-fit: cover; border-radius: 6px;">
                                 <div>
                                     <div class="text-white fw-semibold">${item.name}</div>
-                                    <div class="text-secondary small">Qty: ${item.quantity} · ${item.price} PKR</div>
+                                    <div class="text-secondary small">Qty: ${item.quantity} · ${item.price} BDT</div>
                                 </div>
                             </div>
                         `,
@@ -535,10 +554,6 @@ function initAccountPage() {
   if (!profileForm.length && !passwordForm.length) return;
 
   const user = window.CommerzaAuth?.getCurrentUser?.();
-  if (!user) {
-    window.location.href = "login.html";
-    return;
-  }
 
   if (profileName.length) profileName.text(user.name);
   if (profileEmail.length) profileEmail.text(user.email);
@@ -631,7 +646,7 @@ function initAccountPage() {
 
   logoutBtn.on("click", function () {
     window.CommerzaAuth.logoutUser();
-    window.location.href = "login.html";
+    window.location.href = "index.html";
   });
 
   $(".toggle-password").on("click", function () {
@@ -646,7 +661,17 @@ function initAccountPage() {
 $(document).ready(function () {
   const upBtn = $("#backToTop");
   let cart = JSON.parse(localStorage.getItem("commerza_cart")) || [];
-
+  // Remove profile/account icons and links from the UI
+  try {
+    document.querySelectorAll('a[href="account.html"]').forEach((el) => el.remove());
+    document.querySelectorAll('.bi-person').forEach((icon) => {
+      const link = icon.closest('a');
+      if (link) link.remove();
+      else icon.remove();
+    });
+  } catch (e) {
+    // ignore
+  }
   applySiteSettings();
   
   
@@ -675,6 +700,8 @@ $(document).ready(function () {
   }
   
   initAccountPage();
+
+  // Order notification uses global `sendTelegramNotification(text)`
 
   updateCartBadge();
   updateWishlistBadge();
@@ -746,12 +773,12 @@ $(document).ready(function () {
 
     const normalizedPrice = (() => {
       if (price == null) return "";
-      if (typeof price === "number") return `${price} PKR`;
+      if (typeof price === "number") return `${price} BDT`;
       const text = String(price).trim();
       if (!text) return "";
       if (!/\d/.test(text)) return "";
-      if (/PKR/i.test(text)) return text;
-      return `${text} PKR`;
+      if (/BDT/i.test(text)) return text;
+      return `${text} BDT`;
     })();
 
     return {
@@ -1050,14 +1077,14 @@ $(document).ready(function () {
 
   function updateSummary(subtotal, totalItems) {
     $("#total-items-qty").text(totalItems);
-    $("#cart-subtotal").text(subtotal.toLocaleString() + " PKR");
+    $("#cart-subtotal").text(subtotal.toLocaleString() + " BDT");
 
     $("#cart-shipping").html(`
-            <span style="text-decoration: line-through; color: #b0b0b0;">1000 PKR</span> 
-            <span style="color: #28a745; margin-left: 10px; font-weight: bold;">FREE</span>
-        `);
+        <span style="text-decoration: line-through; color: #b0b0b0;">1000 BDT</span> 
+        <span style="color: #28a745; margin-left: 10px; font-weight: bold;">FREE</span>
+      `);
 
-    $("#cart-total").text(subtotal.toLocaleString() + " PKR");
+    $("#cart-total").text(subtotal.toLocaleString() + " BDT");
   }
 
   const searchConfig = [
@@ -1534,8 +1561,8 @@ $(document).ready(function () {
                         <h1 class="product-name">${product.name}</h1>
                         <p class="product-desc">${product.description || ""}</p>
                         <div class="price-stack">
-                            ${originalPrice ? `<span class="price-original">${originalPrice} PKR</span>` : ""}
-                            ${salePrice ? `<span class="price-sale">${salePrice} PKR</span>` : ""}
+                            ${originalPrice ? `<span class="price-original">${originalPrice} BDT</span>` : ""}
+                            ${salePrice ? `<span class="price-sale">${salePrice} BDT</span>` : ""}
                         </div>
                         <div class="spec-grid">
                             <div class="spec-card">
@@ -1737,7 +1764,7 @@ $(document).ready(function () {
           (p) => `
             <button type="button" class="suggestion-item" data-name="${p.name}">
                 <span class="suggestion-name">${p.name}</span>
-                <span class="suggestion-price">${parseInt(p.salePrice).toLocaleString()} PKR</span>
+                <span class="suggestion-price">${parseInt(p.salePrice).toLocaleString()} BDT</span>
             </button>
         `,
         )
@@ -1810,7 +1837,7 @@ $(document).ready(function () {
   $("#completeCheckoutBtn").on("click", function () {
     const currentUser = window.CommerzaAuth?.getCurrentUser?.();
     if (!currentUser) {
-      window.location.href = "login.html?redirect=cart.html";
+      window.location.href = "index.html";
       return;
     }
 
@@ -1850,6 +1877,16 @@ $(document).ready(function () {
     orders.push(orderData);
     localStorage.setItem("commerza_orders", JSON.stringify(orders));
 
+    try {
+      const itemsText = (orderData.items || [])
+        .map((i) => `${i.quantity} x ${i.name} · ${i.price}`)
+        .join('\n');
+      const msg = `New Order: ${orderData.orderId}\nName: ${orderData.customerName}\nPhone: ${orderData.phone}\nEmail: ${orderData.email}\nAddress: ${orderData.address}\nTotal: ${orderData.total} BDT\nItems:\n${itemsText}\nDate: ${orderData.orderDate}`;
+      window.sendTelegramNotification(msg);
+    } catch (e) {
+      console.warn('Failed to send telegram notification', e);
+    }
+
     cart = [];
     localStorage.setItem("commerza_cart", JSON.stringify(cart));
     updateCartBadge();
@@ -1861,7 +1898,7 @@ $(document).ready(function () {
     $("#checkoutForm")[0].reset();
     setTimeout(
       () =>
-        (window.location.href = "account.html?orderId=" + orderData.orderId),
+        (window.location.href = "order-tracking.html?orderId=" + orderData.orderId),
       2000,
     );
   });
@@ -1959,9 +1996,9 @@ function createProductCard(product) {
                     <p class="card-text product-desc">${product.description}</p>
                     <div class="mb-3">
                         <span class="original-price"
-                            style="text-decoration: line-through; color: #b0b0b0;">${originalPrice} PKR</span>
+                          style="text-decoration: line-through; color: #b0b0b0;">${originalPrice} BDT</span>
                         <span class="sale-price"
-                            style="color: #ff6600; font-weight: bold; margin-left: 5px;">${salePrice} PKR</span>
+                          style="color: #ff6600; font-weight: bold; margin-left: 5px;">${salePrice} BDT</span>
                     </div>
                     <div class="d-flex gap-2">
                         <a href="#" class="btn product-btn-buy product-btn-cart flex-fill text-center justify-content-center align-items-center" data-product-id="${product.id ?? ""}" data-product-name="${product.name}" data-product-image="${product.image}" data-product-price="${product.price}" data-product-sale-price="${product.salePrice}">Buy Now</a>
@@ -2003,6 +2040,12 @@ function initNewsletterModal() {
       "commerza_newsletter_dismissed_at",
       String(Date.now()),
     );
+    try {
+      const msg = `Newsletter signup\nEmail: ${email}\nSource: modal`;
+      window.sendTelegramNotification(msg);
+    } catch (err) {
+      console.warn('Failed to notify telegram (newsletter modal)', err);
+    }
     showNotif("Thanks for subscribing!", "success");
     bootstrap.Modal.getInstance(modalEl)?.hide();
   });
@@ -2084,6 +2127,12 @@ function initNewsletterInlineForm() {
       return;
     }
     if (input) input.value = "";
+    try {
+      const msg = `Newsletter signup\nEmail: ${email}\nSource: inline`;
+      window.sendTelegramNotification(msg);
+    } catch (err) {
+      console.warn('Failed to notify telegram (newsletter inline)', err);
+    }
     showNotif("You are on the list!", "success");
   });
 }
@@ -2140,7 +2189,7 @@ function initOrderTrackingPage() {
                         </div>
                         <span class="status-badge ${statusClass}">${match.status}</span>
                     </div>
-                    <p class="text-secondary mb-2"><strong>Total:</strong> ${match.total.toLocaleString()} PKR</p>
+                    <p class="text-secondary mb-2"><strong>Total:</strong> ${match.total.toLocaleString()} BDT</p>
                     <p class="text-secondary mb-2"><strong>Address:</strong> ${match.address}</p>
                     <div class="mt-3">
                         ${match.items
@@ -2150,7 +2199,7 @@ function initOrderTrackingPage() {
                                 <img src="${item.image}" alt="${item.name}" style="width: 42px; height: 42px; object-fit: cover; border-radius: 6px;">
                                 <div>
                                     <div class="text-white">${item.name}</div>
-                                    <div class="text-secondary small">Qty: ${item.quantity} · ${item.price} PKR</div>
+                                    <div class="text-secondary small">Qty: ${item.quantity} · ${item.price} BDT</div>
                                 </div>
                             </div>
                         `,
@@ -2314,8 +2363,8 @@ function renderWishlistPage() {
                     <div class="flex-grow-1">
                         <h3 class="product-name mb-1">${item.name}</h3>
                         <div class="mb-2">
-                            ${originalPrice ? `<span class="original-price" style="text-decoration: line-through; color: #b0b0b0;">${originalPrice} PKR</span>` : ""}
-                            ${salePrice ? `<span class="sale-price" style="color: #ff6600; font-weight: bold; margin-left: 6px;">${salePrice} PKR</span>` : ""}
+                            ${originalPrice ? `<span class="original-price" style="text-decoration: line-through; color: #b0b0b0;">${originalPrice} BDT</span>` : ""}
+                            ${salePrice ? `<span class="sale-price" style="color: #ff6600; font-weight: bold; margin-left: 6px;">${salePrice} BDT</span>` : ""}
                         </div>
                         <div class="d-flex gap-2">
                             <a href="products.html?id=${item.id}" class="btn product-btn-buy">View</a>
@@ -2361,13 +2410,13 @@ function renderComparePage() {
       label: "Price",
       key: "price",
       render: (item) =>
-        `${item.price != null ? parseInt(item.price).toLocaleString() : "N/A"} PKR`,
+        `${item.price != null ? parseInt(item.price).toLocaleString() : "N/A"} BDT`,
     },
     {
       label: "Sale Price",
       key: "salePrice",
       render: (item) =>
-        `${item.salePrice != null ? parseInt(item.salePrice).toLocaleString() : "N/A"} PKR`,
+        `${item.salePrice != null ? parseInt(item.salePrice).toLocaleString() : "N/A"} BDT`,
     },
     {
       label: "Movement",
