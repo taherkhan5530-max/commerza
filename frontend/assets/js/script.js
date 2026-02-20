@@ -2139,7 +2139,7 @@ function initNewsletterInlineForm() {
 }
 
 function initContactForm() {
-  const form = document.querySelector('form[action="/send-message"]');
+  const form = document.querySelector('#contactForm') || document.querySelector('form[action="/send-message"]');
   if (!form) return;
 
   form.addEventListener('submit', function (event) {
