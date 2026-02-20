@@ -1717,9 +1717,9 @@ function buildDefaultSiteSettings() {
             ]
         },
         socialLinks: [
-            { id: 1, label: 'Facebook', url: 'https://www.facebook.com/commerza.ahmer', icon: 'bi bi-facebook' },
-            { id: 2, label: 'X', url: 'https://x.com/commerza_ahmer', icon: 'bi bi-twitter' },
-            { id: 3, label: 'Instagram', url: 'https://www.instagram.com/commerza.ahmer', icon: 'bi bi-instagram' }
+            { id: 1, label: 'Facebook', url: 'https://www.facebook.com/profile.php?id=61582955453879', icon: 'bi bi-facebook' },
+            { id: 2, label: 'X', url: 'https://x.com/MuhammedTa4048', icon: 'bi bi-twitter' },
+            { id: 3, label: 'Instagram', url: 'https://www.instagram.com/cxtaher?igsh=NjN0d3F2dWJldDN3', icon: 'bi bi-instagram' }
         ],
         sliderImages: [
             {
