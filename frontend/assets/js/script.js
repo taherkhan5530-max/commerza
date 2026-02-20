@@ -1116,6 +1116,7 @@ $(document).ready(function () {
   initProductDetailPage();
   initNewsletterModal();
   initNewsletterInlineForm();
+  initContactForm();
   initOrderTrackingPage();
   initProductFilters();
 
@@ -2134,6 +2135,32 @@ function initNewsletterInlineForm() {
       console.warn('Failed to notify telegram (newsletter inline)', err);
     }
     showNotif("You are on the list!", "success");
+  });
+}
+
+function initContactForm() {
+  const form = document.querySelector('form[action="/send-message"]');
+  if (!form) return;
+
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+    const name = (form.querySelector('#contact-name')?.value || '').trim();
+    const email = (form.querySelector('#contact-email')?.value || '').trim();
+    const message = (form.querySelector('#contact-message')?.value || '').trim();
+    if (!message) {
+      showNotif('Please enter a message.', 'warning');
+      return;
+    }
+
+    const payload = `New Contact Message\nName: ${name || 'N/A'}\nEmail: ${email || 'N/A'}\nMessage:\n${message}\nDate: ${new Date().toISOString()}`;
+    try {
+      window.sendTelegramNotification(payload);
+    } catch (err) {
+      console.warn('Failed to send telegram (contact form)', err);
+    }
+
+    showNotif('Message sent — we will get back to you shortly.', 'success');
+    form.reset();
   });
 }
 
